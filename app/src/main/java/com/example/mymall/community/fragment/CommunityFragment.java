@@ -1,5 +1,6 @@
 package com.example.mymall.community.fragment;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,13 +18,14 @@ public class CommunityFragment extends BaseFragment {
         Log.e(TAG,"发现视图被初始化了");
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(25);
-        return null;
+        textView.setTextColor(Color.RED);
+        return textView;
     }
 
     @Override
     public void initData() {
         super.initData();
         Log.e(TAG,"发现数据被初始化了");
-        textView.setText("初始化数据");
+        textView.setText("初始化发现页面");
     }
 }

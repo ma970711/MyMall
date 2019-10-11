@@ -1,5 +1,6 @@
 package com.example.mymall.home.fragment;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,13 +19,14 @@ public class HomeFragment extends BaseFragment {
         Log.e(TAG,"主页视图被初始化了");
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(25);
-        return null;
+        textView.setTextColor(Color.RED);
+        return textView;
     }
 
     @Override
     public void initData() {
         super.initData();
         Log.e(TAG,"主页数据被初始化了");
-        textView.setText("初始化数据");
+        textView.setText("初始化首页");
     }
 }
