@@ -60,6 +60,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ChannelAdapter adapter;
     private ActViewHolder actViewHolder;
     private SeckillViewHolder seckillViewHolder;
+    private RecommendViewHolder recommendViewHolder;
 
 
     @NonNull
@@ -73,6 +74,10 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return new ActViewHolder(mContext,mLayoutInflater.inflate(R.layout.act_item,null));
         }else if (i == SECKILL){
             return new SeckillViewHolder(mContext,mLayoutInflater.inflate(R.layout.seckill_item,null));
+        }else if (i == RECOMMEND){
+            return new RecommendViewHolder(mContext,mLayoutInflater.inflate(R.layout.recommend_item,null));
+        }else if (i == HOT){
+            return new HotViewHolder(mContext,mLayoutInflater.inflate(R.layout.hot_item,null));
         }
         return null;
     }
@@ -91,13 +96,16 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else if (getItemViewType(i) == SECKILL){
             seckillViewHolder = (SeckillViewHolder) viewHolder;
             seckillViewHolder.setData(resultBean.getSeckill_info());
+        }else if (getItemViewType(i) == RECOMMEND){
+            recommendViewHolder = (RecommendViewHolder) viewHolder;
+            recommendViewHolder.setData(resultBean.getRecommend_info());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return 4; //横幅广告为1
+        return 5; //横幅广告为1
     }
 
     @Override
@@ -310,6 +318,42 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             dt = Integer.valueOf(seckill_info.getEnd_time()) - Integer.valueOf(seckill_info.getStart_time()); //毫秒
 
             handler.sendEmptyMessageDelayed(0,1000);
+        }
+    }
+
+    private class RecommendViewHolder extends RecyclerView.ViewHolder {
+        Context mContext;
+        private TextView tv_more_recommend;
+        private GridView gv_recommend;
+        private RecommendGridViewAdapter adapter;
+
+
+        public RecommendViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            this.mContext = mContext;
+            tv_more_recommend = itemView.findViewById(R.id.tv_more_recommend);
+            gv_recommend = itemView.findViewById(R.id.gv_recommend);
+        }
+
+        public void setData(final List<ResultBeanData.ResultBean.RecommendInfoBean> recommend_info) {
+            //1.有数据
+
+
+            //2.设置适配器
+            adapter = new RecommendGridViewAdapter(mContext,recommend_info);
+            gv_recommend.setAdapter(adapter);
+            gv_recommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(mContext,"当前"+recommend_info.get(i).getName()+"的价格为"+recommend_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+    private class HotViewHolder extends RecyclerView.ViewHolder {
+        public HotViewHolder(Context mContext, View itemView) {
+            super(itemView);
         }
     }
 }
