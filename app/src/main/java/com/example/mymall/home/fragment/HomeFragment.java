@@ -120,8 +120,22 @@ public class HomeFragment extends BaseFragment {
         if (resultBean != null){
             adapter = new HomeRecycleAdapter(mContenxt,resultBean);
             rvHome.setAdapter(adapter);
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(mContenxt, 1);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position <= 4){
+                        //隐藏
+                        ib_top.setVisibility(View.GONE);
+                    }else {
+                        //显示
+                        ib_top.setVisibility(View.VISIBLE);
+                    }
+                    return 1;
+                }
+            });
             //设置布局管理者
-            rvHome.setLayoutManager(new GridLayoutManager(mContenxt,1));
+            rvHome.setLayoutManager(gridLayoutManager);
         }else {
             Toast.makeText(mContenxt,"加载失败",Toast.LENGTH_SHORT).show();
         }

@@ -1,6 +1,7 @@
 package com.example.mymall.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mymall.R;
+import com.example.mymall.app.GoodsInfoActivity;
 import com.example.mymall.home.bean.ResultBeanData;
 import com.example.mymall.utils.Constants;
 import com.youth.banner.Banner;
@@ -174,9 +176,18 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void OnBannerClick(int position) {
                     Toast.makeText(mContext,"position="+position,Toast.LENGTH_SHORT).show();
+                    startGoodsInfoActivity();
                 }
             });
         }
+    }
+
+    /**
+     * 启动商品详情页
+     */
+    private void startGoodsInfoActivity() {
+        Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+        mContext.startActivity(intent);
     }
 
     private class ChannelViewHolder extends RecyclerView.ViewHolder {
@@ -315,6 +326,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onItemClick(int position) {
                     Toast.makeText(mContext,"当前"+seckill_info.getList().get(position).getName()+"的价格为"+seckill_info.getList().get(position).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    startGoodsInfoActivity();
                 }
             });
             //秒杀倒计时
@@ -349,6 +361,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Toast.makeText(mContext,"当前"+recommend_info.get(i).getName()+"的价格为"+recommend_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    startGoodsInfoActivity();
                 }
             });
         }
@@ -374,6 +387,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Toast.makeText(mContext,"当前"+hot_info.get(i).getName()+"的价格为"+hot_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    startGoodsInfoActivity();
                 }
             });
         }
