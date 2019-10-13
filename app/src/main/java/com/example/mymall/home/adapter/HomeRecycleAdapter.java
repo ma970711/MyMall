@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +54,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ChannelViewHolder channelViewHolder;
     private ChannelAdapter adapter;
     private ActViewHolder actViewHolder;
+    private SeckillViewHolder seckillViewHolder;
 
 
     @NonNull
@@ -62,6 +66,8 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return new ChannelViewHolder(mContext,mLayoutInflater.inflate(R.layout.channel_item,null));
         }else if (i == ACT){
             return new ActViewHolder(mContext,mLayoutInflater.inflate(R.layout.act_item,null));
+        }else if (i == SECKILL){
+            return new SeckillViewHolder(mContext,mLayoutInflater.inflate(R.layout.seckill_item,null));
         }
         return null;
     }
@@ -77,13 +83,16 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else if (getItemViewType(i) == ACT){
             actViewHolder = (ActViewHolder) viewHolder;
             actViewHolder.setData(resultBean.getAct_info());
+        }else if (getItemViewType(i) == SECKILL){
+            seckillViewHolder = (SeckillViewHolder) viewHolder;
+            seckillViewHolder.setData(resultBean.getSeckill_info());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return 3; //横幅广告为1
+        return 4; //横幅广告为1
     }
 
     @Override
@@ -240,6 +249,37 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                     container.removeView((View) object);
+                }
+            });
+        }
+    }
+
+    private class SeckillViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_time_seckill;
+        private TextView tv_more_seckill;
+        private RecyclerView rv_seckill;
+        private Context mContext;
+        private SeckillRecyclerViewAdapter adapter;
+
+        public SeckillViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            this.mContext = mContext;
+            tv_time_seckill = itemView.findViewById(R.id.tv_time_seckill);
+            tv_more_seckill = itemView.findViewById(R.id.tv_more_seckill);
+            rv_seckill = itemView.findViewById(R.id.rv_seckill);
+
+
+        }
+
+        public void setData(final ResultBeanData.ResultBean.SeckillInfoBean seckill_info) {
+            adapter = new SeckillRecyclerViewAdapter(mContext,seckill_info.getList());
+            rv_seckill.setAdapter(adapter);
+            rv_seckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL,false));
+            //设置item点击事件
+            adapter.setOnSeckillRecyclerview(new SeckillRecyclerViewAdapter.OnSeckillRecyclerview() {
+                @Override
+                public void onItemClick(int position) {
+                    Toast.makeText(mContext,"当前"+seckill_info.getList().get(position).getName()+"的价格为"+seckill_info.getList().get(position).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
                 }
             });
         }
