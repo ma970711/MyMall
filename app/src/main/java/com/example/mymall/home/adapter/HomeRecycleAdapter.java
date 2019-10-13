@@ -99,13 +99,16 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else if (getItemViewType(i) == RECOMMEND){
             recommendViewHolder = (RecommendViewHolder) viewHolder;
             recommendViewHolder.setData(resultBean.getRecommend_info());
+        }else if (getItemViewType(i) == HOT){
+            HotViewHolder hotViewHolder= (HotViewHolder) viewHolder;
+            hotViewHolder.setData(resultBean.getHot_info());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return 5; //横幅广告为1
+        return 6; //横幅广告为1
     }
 
     @Override
@@ -352,8 +355,27 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private class HotViewHolder extends RecyclerView.ViewHolder {
+        Context mContext;
+        TextView tv_more_hot;
+        GridView gv_hot;
+        HotGridViewAdapter adapter;
         public HotViewHolder(Context mContext, View itemView) {
             super(itemView);
+            this.mContext = mContext;
+            tv_more_hot = itemView.findViewById(R.id.tv_more_hot);
+            gv_hot = itemView.findViewById(R.id.gv_hot);
+
+        }
+
+        public void setData(final List<ResultBeanData.ResultBean.HotInfoBean> hot_info) {
+            adapter = new HotGridViewAdapter(mContext,hot_info);
+            gv_hot.setAdapter(adapter);
+            gv_hot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(mContext,"当前"+hot_info.get(i).getName()+"的价格为"+hot_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 }
