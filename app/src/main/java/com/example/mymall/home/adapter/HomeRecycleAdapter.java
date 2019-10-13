@@ -1,6 +1,8 @@
 package com.example.mymall.home.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -28,8 +30,11 @@ import com.youth.banner.listener.OnLoadImageListener;
 import com.zhy.magicviewpager.transformer.AlphaPageTransformer;
 import com.zhy.magicviewpager.transformer.RotateDownPageTransformer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
@@ -254,12 +259,31 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+
+
     private class SeckillViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_time_seckill;
         private TextView tv_more_seckill;
         private RecyclerView rv_seckill;
         private Context mContext;
         private SeckillRecyclerViewAdapter adapter;
+        private long dt= 0; //结束时间减去开始时间，单位是毫秒
+        private Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                dt = dt - 1000;
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+                String time = formatter.format(new Date(dt));
+                tv_time_seckill.setText(time);
+                handler.removeMessages(0);
+                handler.sendEmptyMessageDelayed(0,1000);
+                if (dt<=0){
+                    //消息移除
+                    handler.removeCallbacksAndMessages(null);
+                }
+            }
+        };
 
         public SeckillViewHolder(Context mContext, View itemView) {
             super(itemView);
@@ -282,6 +306,10 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Toast.makeText(mContext,"当前"+seckill_info.getList().get(position).getName()+"的价格为"+seckill_info.getList().get(position).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
                 }
             });
+            //秒杀倒计时
+            dt = Integer.valueOf(seckill_info.getEnd_time()) - Integer.valueOf(seckill_info.getStart_time()); //毫秒
+
+            handler.sendEmptyMessageDelayed(0,1000);
         }
     }
 }
