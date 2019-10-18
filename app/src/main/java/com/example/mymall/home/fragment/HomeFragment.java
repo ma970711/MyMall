@@ -1,5 +1,6 @@
 package com.example.mymall.home.fragment;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,7 @@ public class HomeFragment extends BaseFragment {
     private TextView tv_message_home;
     private ResultBeanData.ResultBean resultBean;
     private HomeRecycleAdapter adapter;
+    private ProgressDialog db;
 
 
     @Override
@@ -76,7 +78,9 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        Log.e(TAG,"主页数据被初始化了");
+        db = new ProgressDialog(getActivity());
+        db.setMessage("正在加载数据...");
+        db.show();
         //联网请求数据
         getDataFromNet();
 
@@ -98,13 +102,15 @@ public class HomeFragment extends BaseFragment {
                      */
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e(TAG,"首页请求失败=="+e.getMessage());
+                        db.cancel();
+                        Toast.makeText(getActivity(),"联网数据加载失败，请重试",Toast.LENGTH_LONG).show();
 
                     }
                     //当联网成功的时候进行回调
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e(TAG,"首页请求成功=="+response);
+                        db.cancel();
+                        Toast.makeText(getActivity(),"数据加载成功",Toast.LENGTH_SHORT).show();
                         //解析数据
                         processData(response);
                     }

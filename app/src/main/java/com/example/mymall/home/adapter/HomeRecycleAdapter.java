@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.mymall.R;
 import com.example.mymall.app.GoodsInfoActivity;
+import com.example.mymall.home.bean.GoodsBean;
 import com.example.mymall.home.bean.ResultBeanData;
 import com.example.mymall.utils.Constants;
 import com.youth.banner.Banner;
@@ -30,13 +30,11 @@ import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerClickListener;
 import com.youth.banner.listener.OnLoadImageListener;
 import com.zhy.magicviewpager.transformer.AlphaPageTransformer;
-import com.zhy.magicviewpager.transformer.RotateDownPageTransformer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
@@ -48,6 +46,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int SECKILL = 3;//秒杀
     public static final int RECOMMEND = 4;//推荐
     public static final int HOT = 5; //热卖
+    private static final String GOODS_BEAN = "goodsBean";
     /**
      * 当前类型
      */
@@ -176,7 +175,8 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void OnBannerClick(int position) {
                     Toast.makeText(mContext,"position="+position,Toast.LENGTH_SHORT).show();
-                    startGoodsInfoActivity();
+
+//                    startGoodsInfoActivity(goodsBean);
                 }
             });
         }
@@ -184,9 +184,11 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     /**
      * 启动商品详情页
+     * @param goodsBean
      */
-    private void startGoodsInfoActivity() {
+    private void startGoodsInfoActivity(GoodsBean goodsBean) {
         Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+        intent.putExtra(GOODS_BEAN,goodsBean);
         mContext.startActivity(intent);
     }
 
@@ -204,7 +206,7 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gv_channel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Toast.makeText(mContext,"当前为"+resultBean.getChannel_info().get(i).getChannel_name(),Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext,"当前为"+resultBean.getChannel_info().get(i).getChannel_name(),Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -325,8 +327,13 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             adapter.setOnSeckillRecyclerview(new SeckillRecyclerViewAdapter.OnSeckillRecyclerview() {
                 @Override
                 public void onItemClick(int position) {
-                    Toast.makeText(mContext,"当前"+seckill_info.getList().get(position).getName()+"的价格为"+seckill_info.getList().get(position).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
-                    startGoodsInfoActivity();
+//                    Toast.makeText(mContext,"当前"+seckill_info.getList().get(position).getName()+"的价格为"+seckill_info.getList().get(position).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setCover_price(seckill_info.getList().get(position).getCover_price());
+                    goodsBean.setFigure(seckill_info.getList().get(position).getFigure());
+                    goodsBean.setName(seckill_info.getList().get(position).getName());
+                    goodsBean.setProduct_id(seckill_info.getList().get(position).getProduct_id());
+                    startGoodsInfoActivity(goodsBean);
                 }
             });
             //秒杀倒计时
@@ -360,8 +367,13 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gv_recommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Toast.makeText(mContext,"当前"+recommend_info.get(i).getName()+"的价格为"+recommend_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
-                    startGoodsInfoActivity();
+//                    Toast.makeText(mContext,"当前"+recommend_info.get(i).getName()+"的价格为"+recommend_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setCover_price(recommend_info.get(i).getCover_price());
+                    goodsBean.setFigure(recommend_info.get(i).getFigure());
+                    goodsBean.setName(recommend_info.get(i).getName());
+                    goodsBean.setProduct_id(recommend_info.get(i).getProduct_id());
+                    startGoodsInfoActivity(goodsBean);
                 }
             });
         }
@@ -386,8 +398,15 @@ public class HomeRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gv_hot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Toast.makeText(mContext,"当前"+hot_info.get(i).getName()+"的价格为"+hot_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
-                    startGoodsInfoActivity();
+//                    Toast.makeText(mContext,"当前"+hot_info.get(i).getName()+"的价格为"+hot_info.get(i).getCover_price()+"，赶紧购买吧",Toast.LENGTH_LONG).show();
+                    //热卖商品信息类
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setCover_price(hot_info.get(i).getCover_price());
+                    goodsBean.setFigure(hot_info.get(i).getFigure());
+                    goodsBean.setName(hot_info.get(i).getName());
+                    goodsBean.setProduct_id(hot_info.get(i).getProduct_id());
+                    startGoodsInfoActivity(goodsBean);
+
                 }
             });
         }
